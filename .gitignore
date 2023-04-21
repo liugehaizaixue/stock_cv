@@ -1,0 +1,11 @@
+截图*/
+文本*/
+翻译*/
+
+build/
+dist/
+*.spec
+
+requirements.txt
+
+.vscode/
