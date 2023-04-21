@@ -1,6 +1,6 @@
 针对股票截图，提取文本到csv、xlsx中  
-原数据类似  
-![image](https://github.com/liugehaizaixue/stock_cv/blob/main/data/1-15%E7%82%B956%E5%88%8657%E7%A7%92.bmp)  
+原数据在data中，类似 
+![image](static/index.png)  
 
 输出格式类似    
 
