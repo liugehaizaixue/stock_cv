@@ -233,9 +233,9 @@ def convert(folder_path,formatted_time):
     # ... 获取图片列表和初始化 OCR 对象 ...
     # 创建一个队列来存储处理结果
     result_queue = queue.Queue()
-     # 将图片列表按照数量平均分成 4 个子列表
+     # 将图片列表按照数量平均分成 2 个子列表
     image_lists = [image_paths[i:i+len(image_paths)//2] for i in range(0, len(image_paths), len(image_paths)//2)]
-     # 创建 4 个线程来处理图片
+     # 创建 2 个线程来处理图片
     threads = [ImageProcessor(image_list,result_queue,formatted_time) for image_list in image_lists]
     # 启动线程并等待完成
     for thread in threads:

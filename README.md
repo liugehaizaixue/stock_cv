@@ -48,9 +48,33 @@ AttributeError: module ‘onnxruntime‘ has no attribute ‘InferenceSession‘
 ![image](static/cnocr_gpu_3.png)  
 
   
-```python  
+```python   
 providers = ['CUDAExecutionProvider', 'CPUExecutionProvider']  
 ```  
  
 在gpu_v4版本中，  
 ![image](static/cnocr_gpu_4.png)    
+
+```python
+class ImageProcessor(threading.Thread):
+    def __init__(self, image_paths,result_queue,formatted_time):
+        super().__init__()
+        self.image_paths = image_paths
+        self.ocr = cnocr.CnOcr(context="gpu")
+        self.result_queue = result_queue
+        self.formatted_time = formatted_time
+```
+
+
+但是，当我使用gpu时，开启了四个线程，提示了如下错误：
+```
+onnxruntime.capi.onnxruntime_pybind11_state.RuntimeException: [ONNXRuntimeError] : 6 : RUNTIME_EXCEPTION : Non-zero status code returned while running Conv node. Name:'Conv_68' Status Message: D:\a\_work\1\s\onnxruntime\core\providers\cuda\cuda_call.cc:124 onnxruntime::CudaCall D:\a\_work\1\s\onnxruntime\core\providers\cuda\cuda_call.cc:117 onnxruntime::CudaCall CUDA failure 2: out of memory ; GPU=0 ; hostname=DESKTOP-O6EORH9 ; expr=cudaMalloc((void**)&p, size);
+```
+提示内存不足，具体没有解决。但将线程数改为2就好了，比较我的1050 gpu有点垃
+
+```python  
+    # 将图片列表按照数量平均分成 2 个子列表
+    image_lists = [image_paths[i:i+len(image_paths)//2] for i in range(0, len(image_paths), len(image_paths)//2)]
+     # 创建 2 个线程来处理图片
+    threads = [ImageProcessor(image_list,result_queue,formatted_time) for image_list in image_lists]
+```
