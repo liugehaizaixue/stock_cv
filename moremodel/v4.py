@@ -70,6 +70,10 @@ def get_code(code_crop_img,ocr):
     code = -999
     if len(text) == 2: # [代码 , 名称 ]
         code = int(text[0]["text"])
+    elif len(text) == 3 and text[0]["text"].isdigit():
+        code = int(text[0]["text"])
+    elif isinstance(text, list) and len(text) > 0 and isinstance(text[0], dict) and "text" in text[0]:
+        code = int(text[0]["text"])
     return code 
 
 def get_deal(deal_crop_img,ocr):
