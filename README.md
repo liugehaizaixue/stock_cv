@@ -15,6 +15,7 @@ singlemodel 多线程，每个线程公用一个cnocr
 
 ### 2023-04-22 环境版本修改
 torch与cuda版本
+https://pytorch.org/get-started/previous-versions/
 ```
 pip install torch==1.12.1+cu116 torchvision==0.13.1+cu116 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu116
 ```
