@@ -22,19 +22,26 @@ def get_buy_volume(buy_volume_crop_img,ocr):
             my_str = i["text"]
             """ 300万以上  0.00  后者是目标，所以只取偶数值 """
             if flag % 2 == 0:   
-                # if my_str.endswith("万") or my_str.endswith("亿"):
-                #     pattern = r'^([-+]?\d+\.\d+|\d+)'  # 匹配数字和符号部分的正则表达式
-                #     match = re.match(pattern, my_str)
-                if "万" in my_str or "亿" in my_str or "斤" in my_str:
-                    pattern = r'([-+]?\d+\.\d+|\d+)(万|亿|斤)'  # 匹配数字和"万"或"亿"部分的正则表达式
-                    match = re.match(pattern, my_str)
-                    if match:
-                        num = match.group(1)
-                        buy_volume_results.append(float(num))
+                pattern = r'([-+]?\d+\.\d+|\d+)([\u4e00-\u9fa5]*)'
+                match1 = re.match(pattern, my_str)
+                """ 可以匹配 123 +1.23 -4 5.67元 100万 0.0
+                不可以匹配 .11.1 """
+                if match1:
+                    num = match1.group(1)
+                    buy_volume_results.append(float(num))
+                else:
+                    pattern_2 = re.compile(r'^\.(?P<number>\d+)\.?(?P<decimal>\d*)[\u4e00-\u9fa5]?$')
+                    result = pattern_2.match(my_str)
+                    """匹配 .123元 .3.14元 .1000元"""
+                    if result:
+                        number = result.group('number')
+                        decimal = result.group('decimal')
+                        if decimal:
+                            number += '.' + decimal
+                        number=float('-'+number)
+                        buy_volume_results.append(number)
                     else:
                         buy_volume_results.append(-999)
-                else:
-                    buy_volume_results.append(float(my_str))
     else:
         buy_volume_results.append(-999)
         buy_volume_results.append(-999)
